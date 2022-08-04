@@ -19,35 +19,34 @@ class CarRepositoryImpl(
 ) : CarRepository {
 
     init{
-        carNetworkDataSource.downloadedData.observeForever { newCurrentItemList ->
-            persistFetchedCurrentItemList(newCurrentItemList)
+        carNetworkDataSource.downloadedData.observeForever { newCurrentCarList ->
+            persistFetchedCurrentCarList(newCurrentCarList)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getCarList(): LiveData<List<Car>> {
         return withContext(Dispatchers.IO){
-            initItemList()
+            initCarList()
             return@withContext carDao.getCars()
         }
     }
 
-    private fun persistFetchedCurrentItemList(fetchedItem: Item){
+    private fun persistFetchedCurrentCarList(fetchedItem: Item){
         GlobalScope.launch(Dispatchers.IO) {
             carDao.upsert(getCarList(fetchedItem))
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun initItemList(){
-        // TODO : if (true)
+    private suspend fun initCarList(){
+        // TODO
         if (true){
-            fetchItemList()
-            //Log.i("Msg", "Downloaded data from aws.")
+            fetchCarList()
         }
     }
 
-    private suspend fun fetchItemList(){
+    private suspend fun fetchCarList(){
         carNetworkDataSource.fetchData()
     }
 
